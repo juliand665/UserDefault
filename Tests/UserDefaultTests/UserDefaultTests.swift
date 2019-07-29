@@ -82,4 +82,4 @@ struct CodableStruct {
 	var foo: String
 }
 
-extension CodableStruct: Equatable, Codable, IndirectDefaultsValueConvertible {}
+extension CodableStruct: Equatable, Codable, DirectDefaultsValueConvertible {}

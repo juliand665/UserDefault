@@ -31,5 +31,3 @@ extension Date: DirectStorable {}
 extension Array: DirectStorable where Element: DefaultsValue {}
 
 extension Dictionary: DirectStorable where Key == String, Value: DefaultsValue {} // TODO: doesn't key have to be string?
-
-

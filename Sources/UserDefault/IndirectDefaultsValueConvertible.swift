@@ -22,16 +22,12 @@ public extension IndirectDefaultsValueConvertible where Self: DirectDefaultsValu
 	}
 }
 
-/**
-```
 public extension IndirectDefaultsValueConvertible {
 	func save(to defaults: UserDefaults, forKey key: String) throws {
-		try encode().save(to: defaults, forKey: key)
+		try defaultsRepresentation().save(to: defaults, forKey: key)
 	}
 	
-	static func load(from defaults: UserDefaults, forKey key: String) throws -> Self {
-		return try decodeValue(from: try DefaultsRepresentation.load(from: defaults, forKey: key))
+	init(from defaults: UserDefaults, forKey key: String) throws {
+		try self.init(defaultsRepresentation: try DefaultsRepresentation.init(from: defaults, forKey: key))
 	}
 }
-```
-*/

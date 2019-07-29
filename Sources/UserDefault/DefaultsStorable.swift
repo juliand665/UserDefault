@@ -19,13 +19,13 @@ public enum DefaultsError: Error {
 	case missingValue
 }
 
-public extension DefaultsStorable {
+public extension DiffableDefaultsStorable {
 	func hasChanged(from previous: Self) -> Bool {
 		return true
 	}
 }
 
-public extension DefaultsStorable where Self: Equatable {
+public extension DiffableDefaultsStorable where Self: Equatable {
 	func hasChanged(from previous: Self) -> Bool {
 		return previous != self
 	}
