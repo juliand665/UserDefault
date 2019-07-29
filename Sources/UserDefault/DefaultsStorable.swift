@@ -30,15 +30,3 @@ public extension DiffableDefaultsStorable where Self: Equatable {
 		return previous != self
 	}
 }
-
-extension UserDefaults {
-	func hasValue(forKey key: String) -> Bool {
-		return !dictionaryWithValues(forKeys: [key]).isEmpty
-	}
-	
-	func fooValue(forKey key: String) -> Any? {
-		let dict = dictionaryWithValues(forKeys: [key])
-		assert(dict.count < 2)
-		return dict[key]
-	}
-}

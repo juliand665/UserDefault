@@ -13,7 +13,7 @@ extension Optional: DefaultsStorable where Wrapped: DefaultsStorable {
 	}
 	
 	public init(from defaults: UserDefaults, forKey key: String) throws {
-		if defaults.hasValue(forKey: key) {
+		if defaults.object(forKey: key) != nil {
 			self = try Wrapped.init(from: defaults, forKey: key)
 		} else {
 			self = nil
