@@ -33,16 +33,13 @@ import Foundation
 			wrappedValue = try Value(defaultsRepresentation: raw)
 		} catch DefaultsError.missingValue {
 			wrappedValue = defaultValue
-		} catch DefaultsError.typeMismatch(found: let found, expected: let expected) {
-			print("could not load value for key \(key) due to a type mismatch: expected value of type \(expected); found \(found) (using default value instead)")
-			wrappedValue = defaultValue
-		} catch DefaultsError.illegalValue(found: let found, for: let type) {
-			print("could not load value for key \(key) due to an invalid stored value: expected valid representation of type \(type); found \(found) (using default value instead)")
-			wrappedValue = defaultValue
 		} catch {
+			print("could not load value for key '\(key)' due to \(error):")
 			dump(error)
-			fatalError("could not load value for key \(key) due to \(error)")
+			print("using default value instead!")
+			wrappedValue = defaultValue
 		}
+		
 	}
 	
 	public func saveValue() {
@@ -57,5 +54,18 @@ import Foundation
 	public mutating func clear() {
 		defaults.removeObject(forKey: key)
 		wrappedValue = defaultValue
+	}
+}
+
+extension DefaultsError: CustomStringConvertible {
+	public var description: String {
+		switch self {
+		case let .missingValue(key):
+			return "there was no value stored for the key '\(key)'"
+		case let .typeMismatch(found, expected):
+			return "type mismatch: expected value of type \(expected); found '\(found)'"
+		case let .illegalValue(found, type):
+			return "invalid stored value: expected valid representation of type \(type); found '\(found)'"
+		}
 	}
 }
