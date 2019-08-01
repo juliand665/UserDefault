@@ -25,7 +25,6 @@ final class UserDefaultTests: XCTestCase {
 	
 	func testRemovingOptional() {
 		saveAndLoad(nil, defaultValue: "asdf")
-		XCTAssertNil(defaults.object(forKey: testKey))
 	}
 	
 	func testCodable() {
@@ -43,6 +42,8 @@ final class UserDefaultTests: XCTestCase {
 	@UserDefault(key: "optionalPropertyWithDefault", defaultValue: "asdf") var optionalPropertyWithDefaultTest: String?
 	
 	func testProperties() {
+		dump(defaults.persistentDomain(forName: Bundle.main.bundleIdentifier!))
+		
 		XCTAssertNil(propertyTest)
 		propertyTest = "jklö"
 		
@@ -56,7 +57,7 @@ final class UserDefaultTests: XCTestCase {
 		optionalPropertyWithDefaultTest = "jklö"
 		
 		defaults.persistentDomain(forName: Bundle.main.bundleIdentifier!)!.values
-			.forEach { XCTAssertEqual($0 as! String, "jklö") }
+			.forEach { XCTAssert($0 as? String == "jklö" || $0 as? [String] == ["jklö"]) }
 	}
 	
 	func testSomething() {
@@ -67,10 +68,13 @@ final class UserDefaultTests: XCTestCase {
 		dump(defaults.dictionaryRepresentation().count)
 	}
 	
-	private func saveAndLoad<T>(_ value: T, defaultValue: T) where T: DefaultsStorable & Equatable {
+	private func saveAndLoad<T>(_ value: T, defaultValue: T) where T: DefaultsValueConvertible & Equatable {
 		precondition(value != defaultValue)
 		do {
 			var wrapper = UserDefault(key: testKey, defaultValue: defaultValue)
+			// back and forth a few times to make sure everything works
+			wrapper.wrappedValue = value
+			wrapper.wrappedValue = defaultValue
 			wrapper.wrappedValue = value
 		}
 		let wrapper = UserDefault(key: testKey, defaultValue: defaultValue)
@@ -82,4 +86,4 @@ struct CodableStruct {
 	var foo: String
 }
 
-extension CodableStruct: Equatable, Codable, DirectDefaultsValueConvertible {}
+extension CodableStruct: Equatable, Codable, DefaultsValueConvertible {}

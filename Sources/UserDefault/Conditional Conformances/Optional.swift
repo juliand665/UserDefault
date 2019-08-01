@@ -1,22 +1,18 @@
-// Created by Julian Dunskus
-
 import Foundation
 
-// FIXME: this doesn't quite work as intended; ideally, defaults would have a notion of null vs missing
-extension Optional: DefaultsStorable where Wrapped: DefaultsStorable {
-	public func save(to defaults: UserDefaults, forKey key: String) throws {
-		if let value = self {
-			try value.save(to: defaults, forKey: key)
-		} else {
-			defaults.removeObject(forKey: key)
+extension Optional: DefaultsValueConvertible where Wrapped: DefaultsValueConvertible {
+	public typealias DefaultsRepresentation = [Wrapped.DefaultsRepresentation]
+	
+	public init(defaultsRepresentation: DefaultsRepresentation) throws {
+		guard defaultsRepresentation.count < 2 else {
+			// not a very helpful error here
+			throw DefaultsError.typeMismatch(found: defaultsRepresentation, expected: DefaultsRepresentation.self)
 		}
+		
+		self = try defaultsRepresentation.first.map(Wrapped.init(defaultsRepresentation:))
 	}
 	
-	public init(from defaults: UserDefaults, forKey key: String) throws {
-		if defaults.object(forKey: key) != nil {
-			self = try Wrapped.init(from: defaults, forKey: key)
-		} else {
-			self = nil
-		}
+	public func defaultsRepresentation() throws -> [Wrapped.DefaultsRepresentation] {
+		return try self.map { [try $0.defaultsRepresentation()] } ?? []
 	}
 }

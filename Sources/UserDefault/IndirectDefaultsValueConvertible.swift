@@ -1,33 +1,21 @@
-// Created by Julian Dunskus
-
 import Foundation
 
-// heavily WIP; trying to preserve information about the defaults representation whenever possible
-
-public protocol IndirectDefaultsValueConvertible: DefaultsStorable {
-	associatedtype DefaultsRepresentation: DefaultsStorable
+public protocol IndirectDefaultsValueConvertible: DefaultsValueConvertible where
+	DefaultsRepresentation == IndirectRepresentation.DefaultsRepresentation
+{
+	associatedtype IndirectRepresentation: DefaultsValueConvertible
 	
-	init(defaultsRepresentation: DefaultsRepresentation) throws
+	init(indirectRepresentation: IndirectRepresentation) throws
 	
-	func defaultsRepresentation() throws -> DefaultsRepresentation
-	
-	func defaultsValue() throws -> DefaultsValue
-}
-
-public protocol DirectDefaultsValueConvertible: IndirectDefaultsValueConvertible where DefaultsRepresentation: DefaultsValue {}
-
-public extension IndirectDefaultsValueConvertible where Self: DirectDefaultsValueConvertible {
-	func defaultsValue() throws -> DefaultsValue {
-		return try defaultsRepresentation()
-	}
+	func indirectRepresentation() throws -> IndirectRepresentation
 }
 
 public extension IndirectDefaultsValueConvertible {
-	func save(to defaults: UserDefaults, forKey key: String) throws {
-		try defaultsRepresentation().save(to: defaults, forKey: key)
+	init(defaultsRepresentation: DefaultsRepresentation) throws {
+		try self.init(indirectRepresentation: IndirectRepresentation.init(defaultsRepresentation: defaultsRepresentation))
 	}
 	
-	init(from defaults: UserDefaults, forKey key: String) throws {
-		try self.init(defaultsRepresentation: try DefaultsRepresentation.init(from: defaults, forKey: key))
+	func defaultsRepresentation() throws -> DefaultsRepresentation {
+		return try indirectRepresentation().defaultsRepresentation()
 	}
 }
