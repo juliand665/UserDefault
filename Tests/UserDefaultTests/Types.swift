@@ -29,3 +29,24 @@ extension SlightlyLessStringy: IndirectDefaultsValueConvertible {
 		return stringy
 	}
 }
+
+struct CeciNestPasUnArray<Element> {
+	var storage: [Element]
+}
+
+extension CeciNestPasUnArray: Equatable where Element: Equatable {}
+
+extension CeciNestPasUnArray: IndirectDefaultsValueConvertible, DefaultsValueConvertible where
+	Element: DefaultsValueConvertible
+{
+	typealias DefaultsRepresentation = [Element.DefaultsRepresentation]
+	typealias IndirectRepresentation = [Element]
+	
+	init(indirectRepresentation: IndirectRepresentation) throws {
+		storage = indirectRepresentation
+	}
+	
+	func indirectRepresentation() throws -> IndirectRepresentation {
+		return storage
+	}
+}

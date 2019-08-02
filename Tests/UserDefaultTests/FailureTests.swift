@@ -4,8 +4,10 @@ import XCTest
 final class FailureTests: Tests {
 	static var allTests = [
 		("type mismatch", testTypeMismatch),
-		("illegal value", testIllegalValue),
+		("illegal stringy value", testIllegalStringyValue),
+		("illegal optional value", testIllegalOptionalValue),
 		("other error", testOtherError),
+		("reset", testReset),
 	]
 	
 	func testTypeMismatch() {
@@ -27,7 +29,7 @@ final class FailureTests: Tests {
 		}
 	}
 	
-	func testIllegalValue() {
+	func testIllegalStringyValue() {
 		do {
 			var string = UserDefault(key: testKey, defaultValue: "initial")
 			string.wrappedValue = "fghj"
@@ -42,6 +44,18 @@ final class FailureTests: Tests {
 		do {
 			let string = UserDefault(key: testKey, defaultValue: "initial")
 			XCTAssertEqual(string.wrappedValue, "jklö")
+		}
+	}
+	
+	func testIllegalOptionalValue() {
+		do {
+			var array = UserDefault(key: testKey, defaultValue: ["initial"])
+			array.wrappedValue = ["one", "two"] // too many for optional
+		}
+		
+		do {
+			let optional = UserDefault<String?>(key: testKey)
+			XCTAssertNil(optional.wrappedValue)
 		}
 	}
 	
@@ -62,4 +76,56 @@ final class FailureTests: Tests {
 			XCTAssert(data.wrappedValue.count >= 8)
 		}
 	}
+	
+	func testReset() {
+		do {
+			var optional = UserDefault<String?>(key: testKey)
+			XCTAssertNil(optional.wrappedValue)
+			optional.wrappedValue = "asdf"
+		}
+		
+		do {
+			var optional = UserDefault<String?>(key: testKey)
+			XCTAssertEqual(optional.wrappedValue, "asdf")
+			optional.clear()
+		}
+		
+		do {
+			print(try [String].init(from: defaults, forKey: testKey))
+			XCTFail("this call should fail!")
+		} catch {
+			switch error {
+			case DefaultsError.missingValue(testKey):
+				print(error)
+			default:
+				XCTFail("this call should only result in a missing value error")
+			}
+		}
+	}
+	
+	func testSavingError() {
+		let initial = BadEncoder(foo: 42)
+		
+		do {
+			var foo = UserDefault<BadEncoder>(key: testKey, defaultValue: initial)
+			foo.wrappedValue = BadEncoder(foo: -1)
+		}
+		
+		do {
+			let foo = UserDefault<BadEncoder>(key: testKey, defaultValue: initial)
+			XCTAssertEqual(foo.wrappedValue, initial)
+		}
+	}
 }
+
+private struct BadEncoder: Equatable {
+	var foo: Int
+}
+
+extension BadEncoder: Codable, DefaultsValueConvertible {
+	func encode(to encoder: Encoder) throws {
+		throw BadError()
+	}
+}
+
+private struct BadError: Error {}

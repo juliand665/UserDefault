@@ -12,6 +12,9 @@ final class SimpleTests: Tests {
 		("string convertible-ish array", testStringConvertibleishArray),
 		("dictionary", testDictionary),
 		("dict dict array", testDictDictArray),
+		("not an array", testNotAnArray),
+		("set", testSet),
+		("nscoding", testNSCoding),
 	]
 	
 	func testOptional() {
@@ -58,4 +61,21 @@ final class SimpleTests: Tests {
 		]
 		saveAndLoad(dict, defaultValue: ["hah": [:]])
 	}
+	
+	func testNotAnArray() {
+		let notAnArray = CeciNestPasUnArray(storage: [Stringy.asdf, .jklö, .asdf, .asdf])
+		saveAndLoad(notAnArray, defaultValue: CeciNestPasUnArray(storage: [.asdf]))
+	}
+	
+	func testSet() {
+		let set: Set = [Stringy.asdf, .jklö, .asdf, .asdf]
+		saveAndLoad(set, defaultValue: [.asdf])
+	}
+	
+	func testNSCoding() {
+		let color = #colorLiteral(red: 0.9607843161, green: 0.7058823705, blue: 0.200000003, alpha: 1)
+		saveAndLoad(color, defaultValue: #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1))
+	}
 }
+
+extension NSColor: DefaultsValueConvertible {}
