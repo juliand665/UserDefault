@@ -5,8 +5,7 @@ extension Optional: DefaultsValueConvertible where Wrapped: DefaultsValueConvert
 	
 	public init(defaultsRepresentation: DefaultsRepresentation) throws {
 		guard defaultsRepresentation.count < 2 else {
-			// not a very helpful error here
-			throw DefaultsError.typeMismatch(found: defaultsRepresentation, expected: DefaultsRepresentation.self)
+			throw DefaultsError.illegalValue(found: defaultsRepresentation, for: Self.self)
 		}
 		
 		self = try defaultsRepresentation.first.map(Wrapped.init(defaultsRepresentation:))
