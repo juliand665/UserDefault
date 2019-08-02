@@ -52,8 +52,8 @@ import Foundation
 	}
 	
 	public mutating func clear() {
-		defaults.removeObject(forKey: key)
 		wrappedValue = defaultValue
+		defaults.removeObject(forKey: key)
 	}
 }
 
