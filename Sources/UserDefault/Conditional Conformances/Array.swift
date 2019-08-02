@@ -1,5 +1,3 @@
-// Created by Julian Dunskus
-
 import Foundation
 
 extension Array: DefaultsValue where Element: DefaultsValue {}

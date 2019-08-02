@@ -1,5 +1,3 @@
-// Created by Julian Dunskus
-
 import Foundation
 
 extension Dictionary: DefaultsValue where Key == String, Value: DefaultsValue {}
