@@ -1,15 +1,22 @@
 import Foundation
 
-// TODO: find way to make this work before iOS 11 without using deprecated methods
-@available(OSX 10.13, *)
-@available(iOS 11.0, *)
 public extension DefaultsValueConvertible where Self: NSObject & NSCoding {
 	func defaultsRepresentation() throws -> Data {
-		return try NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: false)
+		if #available(macOS 10.13, iOS 11.0, *) {
+			return try NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: false)
+		} else {
+			return NSKeyedArchiver.archivedData(withRootObject: self)
+		}
 	}
 	
 	init(defaultsRepresentation: Data) throws {
-		self = try NSKeyedUnarchiver.unarchivedObject(ofClass: Self.self, from: defaultsRepresentation)
-			??? DefaultsError.illegalValue(found: defaultsRepresentation, for: Self.self)
+		let object: Self?
+		if #available(macOS 10.13, iOS 11.0, *) {
+			object = try NSKeyedUnarchiver.unarchivedObject(ofClass: Self.self, from: defaultsRepresentation)
+		} else {
+			object = NSKeyedUnarchiver.unarchiveObject(with: defaultsRepresentation) as? Self
+		}
+		
+		self = try object ??? DefaultsError.illegalValue(found: defaultsRepresentation, for: Self.self)
 	}
 }
