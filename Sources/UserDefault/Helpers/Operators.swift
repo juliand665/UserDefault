@@ -12,7 +12,7 @@ import Foundation
 
 infix operator <-: NilCoalescingPrecedence
 
-@discardableResult public func <- <T>(object: T, transform: (inout T) throws -> Void) rethrows -> T {
+@discardableResult func <- <T>(object: T, transform: (inout T) throws -> Void) rethrows -> T {
 	var copy = object
 	try transform(&copy)
 	return copy
