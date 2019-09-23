@@ -14,17 +14,21 @@ import Foundation
 		}
 	}
 	
-	public init(key: String, defaults: UserDefaults = .standard, defaultValue: Value) {
+	public init(wrappedValue: Value, _ key: String, defaults: UserDefaults) {
 		self.key = key
-		self.defaults = defaults
-		self.defaultValue = defaultValue
+		self.defaults = .standard
+		self.defaultValue = wrappedValue
 		
-		wrappedValue = defaultValue
+		self.wrappedValue = defaultValue
 		loadValue()
 	}
 	
-	public init<T>(key: String, defaults: UserDefaults = .standard) where Value == T? {
-		self.init(key: key, defaults: defaults, defaultValue: nil)
+	public init(wrappedValue: Value, _ key: String) {
+		self.init(wrappedValue: wrappedValue, key, defaults: .standard)
+	}
+	
+	public init<T>(_ key: String, defaults: UserDefaults = .standard) where Value == T? {
+		self.init(wrappedValue: nil, key)
 	}
 	
 	public mutating func loadValue() {

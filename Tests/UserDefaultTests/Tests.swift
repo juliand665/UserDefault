@@ -15,12 +15,12 @@ class Tests: XCTestCase {
 func saveAndLoad<T>(_ value: T, defaultValue: T) where T: DefaultsValueConvertible & Equatable {
 	precondition(value != defaultValue)
 	do {
-		var wrapper = UserDefault(key: testKey, defaultValue: defaultValue)
+		var wrapper = UserDefault(wrappedValue: defaultValue, testKey)
 		// back and forth a few times to make sure everything works
 		wrapper.wrappedValue = value
 		wrapper.wrappedValue = defaultValue
 		wrapper.wrappedValue = value
 	}
-	let wrapper = UserDefault(key: testKey, defaultValue: defaultValue)
+	let wrapper = UserDefault(wrappedValue: defaultValue, testKey)
 	XCTAssertEqual(wrapper.wrappedValue, value)
 }

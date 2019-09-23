@@ -6,11 +6,25 @@ final class PropertyWrapperTests: Tests {
 		("properties", testProperties),
 	]
 	
-	@UserDefault(key: "property") var propertyTest: String
-	@UserDefault(key: "propertyWithDefault", defaultValue: "asdf") var propertyWithDefaultTest: String
+	@UserDefault("property")
+	var propertyTest: String
+	@UserDefault("propertyWithDefault")
+	var propertyWithDefaultTest: String = "asdf"
 	
-	@UserDefault(key: "optionalProperty") var optionalPropertyTest: String?
-	@UserDefault(key: "optionalPropertyWithDefault", defaultValue: "asdf") var optionalPropertyWithDefaultTest: String?
+	@UserDefault("optionalProperty")
+	var optionalPropertyTest: String?
+	@UserDefault("optionalPropertyWithDefault")
+	var optionalPropertyWithDefaultTest: String? = "asdf"
+	
+	@UserDefault("property2", defaults: .standard)
+	var propertyTest2: String
+	@UserDefault("propertyWithDefault2", defaults: .standard)
+	var propertyWithDefaultTest2: String = "asdf"
+	
+	@UserDefault("optionalProperty2", defaults: .standard)
+	var optionalPropertyTest2: String?
+	@UserDefault("optionalPropertyWithDefault2", defaults: .standard)
+	var optionalPropertyWithDefaultTest2: String? = "asdf"
 	
 	func testProperties() {
 		dump(defaults.persistentDomain(forName: Bundle.main.bundleIdentifier!))

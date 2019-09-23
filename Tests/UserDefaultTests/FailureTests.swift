@@ -12,18 +12,18 @@ final class FailureTests: Tests {
 	
 	func testTypeMismatch() {
 		do {
-			var string = UserDefault(key: testKey, defaultValue: "asdf")
+			var string = UserDefault(wrappedValue: "asdf", testKey)
 			string.wrappedValue = "jklö"
 		}
 		
 		do {
-			var int = UserDefault(key: testKey, defaultValue: 42)
+			var int = UserDefault(wrappedValue: 42, testKey)
 			XCTAssertEqual(int.wrappedValue, 42)
 			int.wrappedValue = 18
 		}
 		
 		do {
-			var string = UserDefault(key: testKey, defaultValue: "asdf")
+			var string = UserDefault(wrappedValue: "asdf", testKey)
 			XCTAssertEqual(string.wrappedValue, "asdf")
 			string.wrappedValue = "jklö"
 		}
@@ -31,47 +31,47 @@ final class FailureTests: Tests {
 	
 	func testIllegalStringyValue() {
 		do {
-			var string = UserDefault(key: testKey, defaultValue: "initial")
+			var string = UserDefault(wrappedValue: "initial", testKey)
 			string.wrappedValue = "fghj"
 		}
 		
 		do {
-			var stringy = UserDefault(key: testKey, defaultValue: Stringy.asdf)
+			var stringy = UserDefault(wrappedValue: Stringy.asdf, testKey)
 			XCTAssertEqual(stringy.wrappedValue, .asdf)
 			stringy.wrappedValue = .jklö
 		}
 		
 		do {
-			let string = UserDefault(key: testKey, defaultValue: "initial")
+			let string = UserDefault(wrappedValue: "initial", testKey)
 			XCTAssertEqual(string.wrappedValue, "jklö")
 		}
 	}
 	
 	func testIllegalOptionalValue() {
 		do {
-			var array = UserDefault(key: testKey, defaultValue: ["initial"])
+			var array = UserDefault(wrappedValue: ["initial"], testKey)
 			array.wrappedValue = ["one", "two"] // too many for optional
 		}
 		
 		do {
-			let optional = UserDefault<String?>(key: testKey)
+			let optional = UserDefault<String?>(testKey)
 			XCTAssertNil(optional.wrappedValue)
 		}
 	}
 	
 	func testOtherError() {
 		do {
-			var data = UserDefault(key: testKey, defaultValue: Data())
+			var data = UserDefault(wrappedValue: Data(), testKey)
 			data.wrappedValue = "asdf".data(using: .utf8)!
 		}
 		
 		do {
-			var codable = UserDefault(key: testKey, defaultValue: CodableStruct(foo: "initial"))
+			var codable = UserDefault(wrappedValue: CodableStruct(foo: "initial"), testKey)
 			codable.wrappedValue = CodableStruct(foo: "foo value")
 		}
 		
 		do {
-			let data = UserDefault(key: testKey, defaultValue: Data())
+			let data = UserDefault(wrappedValue: Data(), testKey)
 			// that encoding should definitely be at least 8 bytes long
 			XCTAssert(data.wrappedValue.count >= 8)
 		}
@@ -79,13 +79,13 @@ final class FailureTests: Tests {
 	
 	func testReset() {
 		do {
-			var optional = UserDefault<String?>(key: testKey)
+			var optional = UserDefault<String?>(testKey)
 			XCTAssertNil(optional.wrappedValue)
 			optional.wrappedValue = "asdf"
 		}
 		
 		do {
-			var optional = UserDefault<String?>(key: testKey)
+			var optional = UserDefault<String?>(testKey)
 			XCTAssertEqual(optional.wrappedValue, "asdf")
 			optional.clear()
 		}
@@ -107,12 +107,12 @@ final class FailureTests: Tests {
 		let initial = BadEncoder(foo: 42)
 		
 		do {
-			var foo = UserDefault<BadEncoder>(key: testKey, defaultValue: initial)
+			var foo = UserDefault<BadEncoder>(wrappedValue: initial, testKey)
 			foo.wrappedValue = BadEncoder(foo: -1)
 		}
 		
 		do {
-			let foo = UserDefault<BadEncoder>(key: testKey, defaultValue: initial)
+			let foo = UserDefault<BadEncoder>(wrappedValue: initial, testKey)
 			XCTAssertEqual(foo.wrappedValue, initial)
 		}
 	}
