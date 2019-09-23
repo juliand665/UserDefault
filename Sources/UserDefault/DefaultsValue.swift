@@ -19,9 +19,7 @@ public extension DefaultsValue {
 		self = defaultsRepresentation
 	}
 	
-	func defaultsRepresentation() throws -> Self {
-		return self
-	}
+	func defaultsRepresentation() throws -> Self { self }
 	
 	func save(to defaults: UserDefaults, forKey key: String) throws {
 		defaults.set(self, forKey: key)

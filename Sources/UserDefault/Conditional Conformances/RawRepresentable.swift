@@ -13,6 +13,6 @@ public extension DefaultsValueConvertible where
 	}
 	
 	func defaultsRepresentation() throws -> DefaultsRepresentation {
-		return try rawValue.defaultsRepresentation()
+		try rawValue.defaultsRepresentation()
 	}
 }

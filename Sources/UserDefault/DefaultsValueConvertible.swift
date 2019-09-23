@@ -16,13 +16,9 @@ public protocol DefaultsValueConvertible {
 }
 
 public extension DefaultsValueConvertible {
-	func hasChanged(from previous: Self) -> Bool {
-		return true
-	}
+	func hasChanged(from previous: Self) -> Bool { true }
 }
 
 public extension DefaultsValueConvertible where Self: Equatable {
-	func hasChanged(from previous: Self) -> Bool {
-		return previous != self
-	}
+	func hasChanged(from previous: Self) -> Bool { previous != self }
 }

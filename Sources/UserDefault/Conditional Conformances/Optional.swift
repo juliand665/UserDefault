@@ -12,6 +12,6 @@ extension Optional: DefaultsValueConvertible where Wrapped: DefaultsValueConvert
 	}
 	
 	public func defaultsRepresentation() throws -> [Wrapped.DefaultsRepresentation] {
-		return try self.map { [try $0.defaultsRepresentation()] } ?? []
+		try self.map { [try $0.defaultsRepresentation()] } ?? []
 	}
 }

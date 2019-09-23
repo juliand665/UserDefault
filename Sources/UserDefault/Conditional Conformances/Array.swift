@@ -10,6 +10,6 @@ extension Array: DefaultsValueConvertible where Element: DefaultsValueConvertibl
 	}
 	
 	public func defaultsRepresentation() throws -> DefaultsRepresentation {
-		return try self.map { try $0.defaultsRepresentation() }
+		try self.map { try $0.defaultsRepresentation() }
 	}
 }

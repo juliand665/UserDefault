@@ -16,6 +16,6 @@ public extension IndirectDefaultsValueConvertible {
 	}
 	
 	func defaultsRepresentation() throws -> DefaultsRepresentation {
-		return try indirectRepresentation().defaultsRepresentation()
+		try indirectRepresentation().defaultsRepresentation()
 	}
 }

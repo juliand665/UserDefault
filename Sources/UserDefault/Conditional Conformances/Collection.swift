@@ -24,7 +24,7 @@ extension DefaultsValueConvertible where
 	}
 	
 	public func defaultsRepresentation() throws -> [Element.DefaultsRepresentation] {
-		return try self.map { try $0.defaultsRepresentation() }
+		try self.map { try $0.defaultsRepresentation() }
 	}
 }
 

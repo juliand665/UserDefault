@@ -8,6 +8,6 @@ public extension DefaultsValueConvertible where Self: Codable {
 	}
 	
 	func defaultsRepresentation() throws -> Data {
-		return try encoder.encode(self)
+		try encoder.encode(self)
 	}
 }
