@@ -78,4 +78,8 @@ final class SimpleTests: Tests {
 	}
 }
 
+#if os(macOS) 
 extension NSColor: DefaultsValueConvertible {}
+#else
+extension UIColor: DefaultsValueConvertible {}
+#endif
