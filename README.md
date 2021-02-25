@@ -103,3 +103,5 @@ Plist-compatible types (like `Bool`, `Data`, `String`, etc.) conform to the `Def
 The `@UserDefault` property wrapper works with any type conforming to `DefaultsValueConvertible`, which encodes to and from an associated type that conforms to `DefaultsValue`, which is in turn stored in and loaded from the defaults. (`DefaultsValue` itself also conforms to this protocol so you can use it with the wrapper.)
 
 If you'd like to delegate to another `DefaultsValueConvertible` type rather than working directly with plist-compatible types, you can instead conform to `IndirectDefaultsValueConvertible` (which inherits from the former), allowing you to encode to and from any `DefaultsValueConvertible` type. What this means is that you can have arbitrarily long chains of en-/decoding delegation with minimal boilerplate.
+
+If you're working with a sequence-ish type, your best bet is probably to conform to `ExpressibleByArray` or `ExpressibleBySequence`, which will allow you to avoid the boilerplate of mapping your elements to/from their defaults representation provided you have a way to initialize yourself from an `Array` or any `Sequence`, respectively.
