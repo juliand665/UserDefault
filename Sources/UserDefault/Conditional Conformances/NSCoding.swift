@@ -1,4 +1,5 @@
 import Foundation
+import HandyOperators
 
 public extension DefaultsValueConvertible where Self: NSObject & NSCoding {
 	func defaultsRepresentation() throws -> Data {

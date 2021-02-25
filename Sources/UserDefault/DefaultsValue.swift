@@ -1,4 +1,5 @@
 import Foundation
+import HandyOperators
 
 /// You probably don't want to conform to this protocol; it's only for types that can be stored and loaded directly to `UserDefaults` with `saveObject` and `loadObject`, like `Bool`, `Int`, etc.
 public protocol DefaultsValue: DefaultsValueConvertible {
