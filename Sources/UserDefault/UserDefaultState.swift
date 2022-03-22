@@ -1,5 +1,8 @@
-#if canImport(SwiftUI)
+// https://stackoverflow.com/a/67853022/3213030
+#if canImport(SwiftUI) && (!os(iOS) || arch(arm64))
 import SwiftUI
+
+// TODO: could probably use environment to accept defaults suite; would have to use update() method to apply it i think
 
 extension UserDefault {
 	/// lightweight wrapper to ease the composition of `@State` with `@UserDefault`
