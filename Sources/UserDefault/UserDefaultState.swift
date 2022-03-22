@@ -5,10 +5,10 @@ extension UserDefault {
 	/// lightweight wrapper to ease the composition of `@State` with `@UserDefault`
 	@available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
 	@propertyWrapper
-	struct State: DynamicProperty {
-		@SwiftUI.State @UserDefault var wrappedValue: Value
+	public struct State: DynamicProperty {
+		@SwiftUI.State @UserDefault public var wrappedValue: Value
 		
-		var projectedValue: Binding<Value> {
+		public var projectedValue: Binding<Value> {
 			$wrappedValue[dynamicMember: \.wrappedValue]
 		}
 		
