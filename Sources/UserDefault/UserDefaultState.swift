@@ -20,8 +20,8 @@ extension UserDefault {
 			self.init(inner: UserDefault(wrappedValue: wrappedValue, key))
 		}
 		
-		public init<T>(_ key: String) where Value == T? {
-			self.init(inner: UserDefault(key))
+		public init(_ key: String) where Value: ExpressibleByNilLiteral {
+			self.init(wrappedValue: nil, key)
 		}
 	}
 }

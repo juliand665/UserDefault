@@ -25,7 +25,7 @@ import Foundation
 		self.init(wrappedValue: wrappedValue, key, defaults: .standard)
 	}
 	
-	public init<T>(_ key: String, defaults: UserDefaults = .standard) where Value == T? {
+	public init(_ key: String, defaults: UserDefaults = .standard) where Value: ExpressibleByNilLiteral {
 		self.init(wrappedValue: nil, key)
 	}
 	
