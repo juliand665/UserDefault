@@ -16,7 +16,7 @@ extension UserDefault {
 			_wrappedValue = .init(wrappedValue: inner)
 		}
 		
-		init(wrappedValue: Value, _ key: String) {
+		public init(wrappedValue: Value, _ key: String) {
 			self.init(inner: UserDefault(wrappedValue: wrappedValue, key))
 		}
 		
