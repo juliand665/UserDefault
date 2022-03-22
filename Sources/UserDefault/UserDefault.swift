@@ -18,9 +18,7 @@ import Foundation
 		self.key = key
 		self.defaults = .standard
 		self.defaultValue = wrappedValue
-		
-		self.wrappedValue = defaultValue
-		loadValue()
+		self.wrappedValue = Self.loadValue(from: defaults, forKey: key) ?? defaultValue
 	}
 	
 	public init(wrappedValue: Value, _ key: String) {
@@ -32,18 +30,20 @@ import Foundation
 	}
 	
 	public mutating func loadValue() {
+		wrappedValue = Self.loadValue(from: defaults, forKey: key) ?? wrappedValue
+	}
+	
+	private static func loadValue(from defaults: UserDefaults, forKey key: String) -> Value? {
 		do {
 			let raw = try Value.DefaultsRepresentation.init(from: defaults, forKey: key)
-			wrappedValue = try Value(defaultsRepresentation: raw)
+			return try Value(defaultsRepresentation: raw)
 		} catch DefaultsError.missingValue {
-			wrappedValue = defaultValue
+			return nil
 		} catch {
 			print("could not load value for key '\(key)' due to \(error):")
 			dump(error)
-			print("using default value instead!")
-			wrappedValue = defaultValue
+			return nil
 		}
-		
 	}
 	
 	public func saveValue() {
