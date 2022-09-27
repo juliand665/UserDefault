@@ -30,7 +30,8 @@ import Foundation
 	}
 	
 	public mutating func loadValue() {
-		wrappedValue = Self.loadValue(from: defaults, forKey: key) ?? wrappedValue
+		guard let loaded = Self.loadValue(from: defaults, forKey: key) else { return }
+		wrappedValue = loaded
 	}
 	
 	private static func loadValue(from defaults: UserDefaults, forKey key: String) -> Value? {
