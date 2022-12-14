@@ -3,8 +3,7 @@ import Foundation
 @propertyWrapper public struct UserDefault<Value> where Value: DefaultsValueConvertible {
 	public let key: String
 	public let defaultValue: Value
-	
-	private let defaults: UserDefaults
+	public let defaults: UserDefaults
 	
 	public var wrappedValue: Value {
 		didSet {
