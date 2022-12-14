@@ -3,6 +3,7 @@ import Foundation
 @propertyWrapper public struct UserDefault<Value> where Value: DefaultsValueConvertible {
 	public let key: String
 	public let defaultValue: Value
+	public private(set) var wasLoadedSuccessfully: Bool
 	public let defaults: UserDefaults
 	
 	public var wrappedValue: Value {
@@ -17,7 +18,9 @@ import Foundation
 		self.key = key
 		self.defaults = defaults
 		self.defaultValue = wrappedValue
-		self.wrappedValue = Self.loadValue(from: defaults, forKey: key) ?? defaultValue
+		let loaded = Self.loadValue(from: defaults, forKey: key)
+		self.wrappedValue = loaded ?? defaultValue
+		self.wasLoadedSuccessfully = loaded != nil
 	}
 	
 	public init(wrappedValue: Value, _ key: String) {
@@ -29,7 +32,9 @@ import Foundation
 	}
 	
 	public mutating func loadValue() {
-		guard let loaded = Self.loadValue(from: defaults, forKey: key) else { return }
+		let loaded = Self.loadValue(from: defaults, forKey: key)
+		wasLoadedSuccessfully = loaded != nil
+		guard let loaded else { return }
 		wrappedValue = loaded
 	}
 	
