@@ -16,7 +16,7 @@ import Foundation
 	
 	public init(wrappedValue: Value, _ key: String, defaults: UserDefaults) {
 		self.key = key
-		self.defaults = .standard
+		self.defaults = defaults
 		self.defaultValue = wrappedValue
 		self.wrappedValue = Self.loadValue(from: defaults, forKey: key) ?? defaultValue
 	}
