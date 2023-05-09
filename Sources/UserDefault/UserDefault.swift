@@ -28,7 +28,7 @@ import Foundation
 	}
 	
 	public init(_ key: String, defaults: UserDefaults = .standard) where Value: ExpressibleByNilLiteral {
-		self.init(wrappedValue: nil, key)
+		self.init(wrappedValue: nil, key, defaults: defaults)
 	}
 	
 	public mutating func loadValue() {
