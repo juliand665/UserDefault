@@ -9,14 +9,21 @@ extension UserDefault {
 	@available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
 	@propertyWrapper
 	public struct State: DynamicProperty {
-		@SwiftUI.State @UserDefault public var wrappedValue: Value
-		
-		public var projectedValue: Binding<Value> {
-			$wrappedValue[dynamicMember: \.wrappedValue]
+		// stored explicitly rather than as `@SwiftUI.State @UserDefault var wrappedValue`,
+		// since newer SDKs implement `@State` as a macro, which can't be composed with other property wrappers
+		private var state: SwiftUI.State<UserDefault<Value>>
+
+		public var wrappedValue: Value {
+			get { state.wrappedValue.wrappedValue }
+			nonmutating set { state.wrappedValue.wrappedValue = newValue }
 		}
-		
+
+		public var projectedValue: Binding<Value> {
+			state.projectedValue[dynamicMember: \.wrappedValue]
+		}
+
 		private init(inner: UserDefault<Value>) {
-			_wrappedValue = .init(wrappedValue: inner)
+			state = .init(wrappedValue: inner)
 		}
 		
 		public init(wrappedValue: Value, _ key: String) {
